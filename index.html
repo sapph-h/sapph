@@ -1,81 +1,1646 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>:3</title>
-  <meta name="description" content="hi lol" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Melvin - Cybersecurity Enthusiast, Developer, Student">
+  <title>melvin@portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet">
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #fafafa;
-      --text: #202020;
-      --muted: #666;
-      --line: #e6e6e6;
-      --link: #2457d6;
-    }
-    * { box-sizing: border-box; }
-    body {
+    /* ===== Reset & Base ===== */
+    *,
+    *::before,
+    *::after {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #080B12;
+      --bg-secondary: #101827;
+      --text: #E8F0FF;
+      --muted: #8595AD;
+      --accent: #368BFF;
+      --accent-bright: #64B5FF;
+      --border: #24364F;
+      --font: 'IBM Plex Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
       background: var(--bg);
       color: var(--text);
-      font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    main {
-      width: min(680px, calc(100% - 40px));
-      margin: 13vh auto 64px;
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
     }
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2.2rem, 7vw, 3.2rem);
-      letter-spacing: -0.06em;
-      line-height: 1.1;
+
+    a:hover {
+      color: var(--accent-bright);
     }
-    h2 {
-      margin: 34px 0 8px;
-      font-size: 1rem;
+
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
     }
-    p { margin: 8px 0; }
-    .intro { color: var(--muted); font-size: 1.08rem; }
-    .links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 18px; }
-    a { color: var(--link); text-underline-offset: 3px; }
-    footer {
-      margin-top: 42px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
+
+    ::selection {
+      background: rgba(54, 139, 255, 0.3);
+      color: var(--text);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ===== Terminal Section ===== */
+    #terminal {
+      padding: 2rem 2rem 3rem;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .term-line {
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+      margin-bottom: 0.1rem;
+    }
+
+    .prompt-text .user {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .prompt-text .at {
       color: var(--muted);
-      font-size: .9rem;
     }
-    @media (prefers-color-scheme: dark) {
-      :root { color-scheme: dark; --bg: #111; --text: #eee; --muted: #aaa; --line: #303030; --link: #8baaff; }
+
+    .prompt-text .host {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .prompt-text .path {
+      color: var(--accent-bright);
+    }
+
+    .prompt-text .dollar {
+      color: var(--text);
+    }
+
+    .cursor {
+      color: var(--text);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Interactive prompt */
+    #term-prompt {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      cursor: text;
+      padding: 0.15rem 0;
+      min-height: 1.6em;
+    }
+
+    #term-prompt.focused {
+      background: rgba(54, 139, 255, 0.03);
+      border-radius: 2px;
+    }
+
+    #term-prompt .typed-text {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .term-hint {
+      color: var(--muted);
+      opacity: 0.75;
+      font-size: 0.88rem;
+      margin-left: 0.8ch;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .term-hint:hover {
+      opacity: 1;
+      color: var(--accent-bright);
+    }
+
+    .term-hint:focus-visible {
+      outline: 1px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* Command output */
+    .cmd-output {
+      color: var(--text);
+      margin: 0.25rem 0 0.5rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+    }
+
+    .cmd-output a {
+      color: var(--accent);
+    }
+
+    .cmd-output a:hover {
+      color: var(--accent-bright);
+    }
+
+    .cmd-output .lbl {
+      color: var(--accent);
+      display: inline-block;
+      min-width: 12ch;
+    }
+
+    .cmd-error {
+      color: #e06060;
+    }
+
+    /* ===== Fastfetch ===== */
+    .fastfetch-output {
+      margin: 0.8rem 0 1.2rem;
+    }
+
+    .ff-layout {
+      display: flex;
+      gap: 3rem;
+      align-items: flex-start;
+    }
+
+    .ff-ascii {
+      color: var(--accent);
+      font-size: clamp(0.38rem, 1.1vw, 0.78rem);
+      line-height: 1.15;
+      white-space: pre;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .ff-logo-mobile {
+      display: none;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+
+    .ff-info {
+      min-width: 0;
+    }
+
+    .ff-title .user {
+      color: var(--accent-bright);
+      font-weight: 600;
+    }
+
+    .ff-title .at {
+      color: var(--muted);
+    }
+
+    .ff-title .host {
+      color: var(--accent-bright);
+      font-weight: 600;
+    }
+
+    .ff-sep {
+      color: var(--border);
+      margin: 0.15rem 0;
+    }
+
+    .ff-row {
+      line-height: 1.7;
+    }
+
+    .ff-label {
+      color: var(--accent);
+      font-weight: 500;
+      display: inline-block;
+      min-width: 12ch;
+    }
+
+    .ff-value {
+      color: var(--text);
+    }
+
+    /* ===== Content Sections ===== */
+    .content-section {
+      max-width: 850px;
+      margin-left: max(2rem, 8vw);
+      margin-right: 2rem;
+    }
+
+    .section-heading {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .heading-cursor {
+      display: none;
+      margin-left: 2px;
+      color: var(--text);
+      animation: blink 1s step-end infinite;
+    }
+
+    /* Scroll reveal items */
+    body.js .reveal-item {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    /* ===== About ===== */
+    #about {
+      padding-top: 6rem;
+      padding-bottom: 4rem;
+    }
+
+    .about-layout {
+      display: flex;
+      gap: 3rem;
+      align-items: flex-start;
+    }
+
+    .about-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .about-quote {
+      font-size: 1.1rem;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .about-edu {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .about-role {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+    }
+
+    .pic-wrapper {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .pic-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .pic-wrapper.pic-missing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-secondary);
+    }
+
+    .pic-wrapper.pic-missing::before {
+      content: 'M';
+      font-size: 4rem;
+      color: var(--accent);
+      font-weight: 600;
+      opacity: 0.25;
+    }
+
+    /* Scan line reveal */
+    .pic-wrapper.scan-ready img {
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 1.2s ease;
+    }
+
+    .pic-wrapper.scan-ready.revealed img {
+      clip-path: inset(0);
+    }
+
+    .pic-wrapper.scan-ready::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      top: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pic-wrapper.scan-ready.revealed::after {
+      animation: scanline 1.2s ease forwards;
+    }
+
+    @keyframes scanline {
+      0% {
+        top: 0;
+        opacity: 0.7;
+      }
+
+      90% {
+        opacity: 0.7;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* ===== Skills ===== */
+    #skills {
+      padding-top: 5rem;
+      padding-bottom: 4rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .skill-panel {
+      position: relative;
+      padding: 1.5rem;
+    }
+
+    /* Sequential border drawing */
+    .skill-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 1px;
+      width: 0;
+      background: var(--border);
+      transition: width 0.35s ease;
+    }
+
+    .skill-panel::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      height: 1px;
+      width: 0;
+      background: var(--border);
+      transition: width 0.35s ease 0.55s;
+    }
+
+    .border-lr {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .border-lr::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 0;
+      background: var(--border);
+      transition: height 0.35s ease 0.25s;
+    }
+
+    .border-lr::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 0;
+      background: var(--border);
+      transition: height 0.35s ease 0.25s;
+    }
+
+    .skill-panel.visible::before {
+      width: 100%;
+    }
+
+    .skill-panel.visible::after {
+      width: 100%;
+    }
+
+    .skill-panel.visible .border-lr::before {
+      height: 100%;
+    }
+
+    .skill-panel.visible .border-lr::after {
+      height: 100%;
+    }
+
+    .skill-panel-content {
+      opacity: 0;
+      transition: opacity 0.35s ease 0.8s;
+    }
+
+    .skill-panel.visible .skill-panel-content {
+      opacity: 1;
+    }
+
+    .skill-category {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      color: var(--text);
+    }
+
+    .skill-list li {
+      padding: 0.15rem 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .skill-list li::before {
+      content: '> ';
+      color: var(--accent);
+      opacity: 0.5;
+    }
+
+    .skill-panel-full {
+      grid-column: 1 / -1;
+    }
+
+    /* ===== Projects ===== */
+    #projects {
+      padding-top: 5rem;
+      padding-bottom: 4rem;
+    }
+
+    .projects-loading {
+      color: var(--muted);
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .projects-caret {
+      color: var(--accent);
+    }
+
+    /* ===== Interests ===== */
+    #interests {
+      padding-top: 4rem;
+      padding-bottom: 5rem;
+    }
+
+    .interests-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 3rem;
+      margin-top: 1.5rem;
+    }
+
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .eq-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .eq-bar {
+      width: 3px;
+      background: var(--accent);
+      border-radius: 1px 1px 0 0;
+    }
+
+    .np-label {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .np-song {
+      color: var(--text);
+      font-weight: 500;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .np-artist {
+      color: var(--muted);
+      font-size: 0.82rem;
+      display: block;
+    }
+
+    .interest-sub h3 {
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-bottom: 0.6rem;
+    }
+
+    .genre-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .genre-tag {
+      font-size: 0.72rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.55rem;
+    }
+
+    .plain-list {
+      list-style: none;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .plain-list li {
+      padding: 0.12rem 0;
+    }
+
+    .plain-list li::before {
+      content: '~ ';
+      color: var(--accent);
+      opacity: 0.5;
+    }
+
+    /* ===== Contact ===== */
+    #contact {
+      padding-top: 6rem;
+      padding-bottom: 4rem;
+    }
+
+    .discord-link {
+      display: inline-block;
+      font-size: 1rem;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.65rem 1.6rem;
+      margin: 1.5rem 0 1.5rem;
+      transition: background 0.2s, color 0.2s;
+      font-weight: 500;
+    }
+
+    .discord-link:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .discord-link:focus-visible {
+      outline: 2px solid var(--accent-bright);
+      outline-offset: 4px;
+    }
+
+    .contact-email {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-email a {
+      color: var(--muted);
+    }
+
+    .contact-email a:hover {
+      color: var(--accent);
+    }
+
+    .social-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .social-row a {
+      color: var(--muted);
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .social-row a:hover {
+      color: var(--accent);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      padding: 4rem 2rem 3rem;
+      margin-left: max(2rem, 8vw);
+      margin-right: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .build-tag {
+      color: var(--muted);
+      font-size: 0.72rem;
+      opacity: 0.5;
+    }
+
+    .footer-hint,
+    footer .build-tag:last-child:not(:first-child) {
+      margin-left: auto;
+      text-align: right;
+      cursor: pointer;
+      transition: color 0.2s, opacity 0.2s;
+    }
+
+    .footer-hint:hover,
+    footer .build-tag:last-child:not(:first-child):hover {
+      color: var(--accent-bright);
+      opacity: 0.9;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+      }
+
+      #terminal {
+        padding: 1.25rem 1.25rem 2rem;
+      }
+
+      .ff-ascii {
+        display: none;
+      }
+
+      .ff-logo-mobile {
+        display: block;
+      }
+
+      .ff-layout {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .ff-label {
+        min-width: 11ch;
+      }
+
+      .content-section {
+        margin-left: 1.25rem;
+        margin-right: 1.25rem;
+      }
+
+      .section-heading {
+        font-size: 1.2rem;
+      }
+
+      .about-layout {
+        flex-direction: column-reverse;
+        gap: 1.5rem;
+      }
+
+      .pic-wrapper {
+        width: 150px;
+        height: 150px;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .interests-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      footer {
+        margin-left: 1.25rem;
+        margin-right: 1.25rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #terminal {
+        padding: 1rem;
+      }
+
+      .content-section {
+        margin-left: 1rem;
+        margin-right: 1rem;
+      }
+
+      .ff-logo-mobile {
+        font-size: 2rem;
+      }
+
+      .pic-wrapper {
+        width: 120px;
+        height: 120px;
+      }
+
+      .discord-link {
+        padding: 0.55rem 1.2rem;
+        font-size: 0.9rem;
+      }
+
+      footer {
+        margin-left: 1rem;
+        margin-right: 1rem;
+      }
+    }
+
+    /* ===== Reduced Motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      .reveal-item {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .skill-panel::before,
+      .skill-panel::after {
+        width: 100%;
+      }
+
+      .skill-panel .border-lr::before,
+      .skill-panel .border-lr::after {
+        height: 100%;
+      }
+
+      .skill-panel-content {
+        opacity: 1;
+      }
+
+      .pic-wrapper.scan-ready img {
+        clip-path: none;
+      }
+
+      .heading-cursor {
+        display: none !important;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main>
-    <h1>ello!  im Melvin :D</h1>
-    <p class="intro">student, cybersecurity enthusiast and a confused little soul</p>
-    <p>
-      im studying at Mahindra University and spend my time learning to code,
-      messing around with linux, and exploring cybersecurity and CTFs.
-      this is a small corner of the internet for the things i build and learn.
-    </p>
+  <h1 class="sr-only">Melvin, Cybersecurity Enthusiast, Developer, Student</h1>
 
-    <div class="links">
-      <a href="https://github.com/sapph-h" target="_blank" rel="noreferrer">GitHub ↗</a>
-      <a href="https://discord.com/users/742655903710314506" target="_blank" rel="noreferrer">Discord ↗</a>
-      <a href="https://www.linkedin.com/in/melvin-john-959027313/">LinkedIn ↗</a>
+  <noscript>
+    <div style="padding: 2rem; color: #E8F0FF; font-family: 'IBM Plex Mono', monospace;">
+      <p style="color: #368BFF; font-size: 1.2rem; margin-bottom: 1rem;">melvin@portfolio</p>
+      <p style="margin-bottom: 0.5rem;">Cybersecurity Enthusiast / Developer / Student</p>
+      <p style="font-style: italic; margin-bottom: 1rem;">i do not think, therefore i do not am</p>
+      <p style="color: #8595AD; margin-bottom: 0.5rem;">BTech CSE, Mahindra University, Hyderabad</p>
+      <p style="color: #8595AD; font-size: 0.85rem;">Enable JavaScript for the full interactive terminal experience.</p>
     </div>
+  </noscript>
 
-    <h2>things im into</h2>
-    <p>software development · linux · cybersecurity · CTFs · smoll eggspiriments :d</p>
+  <main>
+    <!-- Terminal -->
+    <section id="terminal" aria-label="Interactive terminal">
+      <div id="term-output" role="log" aria-live="polite" aria-label="Terminal output"></div>
+      <div id="term-prompt" style="display:none" role="group" aria-label="Command line">
+        <span class="prompt-text"><span class="user">melvin</span><span class="at">@</span><span
+            class="host">portfolio</span><span class="path">:~</span><span class="dollar">$ </span></span>
+        <span id="term-typed" class="typed-text"></span>
+        <span class="cursor" id="prompt-cursor">&#x2588;</span>
+        <span id="term-hint" class="term-hint" role="button" tabindex="0"
+          title="Click or type 'start' to explore">start</span>
+        <input type="text" id="term-input" class="sr-only" aria-label="Type a command and press Enter"
+          autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      </div>
+    </section>
 
-    <h2>Projects</h2>
-    <p class="intro">classified heh</p>
+    <!-- About -->
+    <section id="about" class="content-section" aria-label="About">
+      <h2 class="section-heading" data-type-text="~/about/">
+        <span class="heading-text">~/about/</span>
+        <span class="heading-cursor">&#x2588;</span>
+      </h2>
+      <div class="about-layout">
+        <div class="about-text">
+          <p class="about-quote reveal-item">i do not think, therefore i do not am</p>
+          <div class="about-edu reveal-item">
+            <p>BTech CSE</p>
+            <p>Mahindra University, Hyderabad</p>
+          </div>
+          <p class="about-role reveal-item">Cybersecurity Enthusiast / Developer / Student</p>
+        </div>
+        <div class="pic-wrapper" aria-label="Portrait of Melvin">
+          <img src="pic.jpg" alt="Portrait of Melvin" class="profile-pic" loading="lazy">
+        </div>
+      </div>
+    </section>
 
-    <footer>
-      <p>dilly dallying :></p>
+    <!-- Skills -->
+    <section id="skills" class="content-section" aria-label="Technical Skills">
+      <h2 class="section-heading" data-type-text="cat skills.conf">
+        <span class="heading-text">cat skills.conf</span>
+        <span class="heading-cursor">&#x2588;</span>
+      </h2>
+      <div class="skills-grid">
+        <div class="skill-panel">
+          <div class="border-lr"></div>
+          <div class="skill-panel-content">
+            <div class="skill-category">languages</div>
+            <ul class="skill-list">
+              <li>Python</li>
+              <li>Java</li>
+              <li>C</li>
+              <li>SQL</li>
+              <li>QBASIC</li>
+            </ul>
+          </div>
+        </div>
+        <div class="skill-panel">
+          <div class="border-lr"></div>
+          <div class="skill-panel-content">
+            <div class="skill-category">platforms &amp; tools</div>
+            <ul class="skill-list">
+              <li>Linux</li>
+              <li>Android</li>
+              <li>Windows</li>
+              <li>Git</li>
+              <li>Wireshark</li>
+              <li>Unity Engine</li>
+              <li>Cisco Packet Tracer</li>
+              <li>Virtual Machines</li>
+            </ul>
+          </div>
+        </div>
+        <div class="skill-panel skill-panel-full">
+          <div class="border-lr"></div>
+          <div class="skill-panel-content">
+            <div class="skill-category">interests &amp; focus</div>
+            <ul class="skill-list" style="columns: 2; column-gap: 2rem;">
+              <li>Cybersecurity</li>
+              <li>Capture The Flag (CTFs)</li>
+              <li>Network Analysis</li>
+              <li>Ethical Hacking</li>
+              <li>Penetration Testing</li>
+              <li>Reverse Engineering</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="content-section" aria-label="Projects">
+      <h2 class="section-heading" data-type-text="./PROJECTS/">
+        <span class="heading-text">./PROJECTS/</span>
+        <span class="heading-cursor">&#x2588;</span>
+      </h2>
+      <div class="projects-loading reveal-item">
+        <span class="projects-caret">&gt;</span> loading...
+      </div>
+    </section>
+
+    <!-- Interests -->
+    <section id="interests" class="content-section" aria-label="Interests">
+      <h2 class="section-heading" data-type-text="~/interests/">
+        <span class="heading-text">~/interests/</span>
+        <span class="heading-cursor">&#x2588;</span>
+      </h2>
+      <div class="interests-layout">
+        <div>
+          <div class="now-playing reveal-item">
+            <div class="eq-bars" aria-hidden="true">
+              <span class="eq-bar" style="height: 8px"></span>
+              <span class="eq-bar" style="height: 18px"></span>
+              <span class="eq-bar" style="height: 5px"></span>
+              <span class="eq-bar" style="height: 14px"></span>
+              <span class="eq-bar" style="height: 10px"></span>
+            </div>
+            <div>
+              <span class="np-label">NOW PLAYING</span>
+              <span class="np-song">Nude</span>
+              <span class="np-artist">Radiohead</span>
+            </div>
+          </div>
+          <div class="interest-sub reveal-item">
+            <h3>favorite artists</h3>
+            <ul class="plain-list">
+              <li>Radiohead</li>
+              <li>Cigarettes After Sex</li>
+              <li>Gregory Alan Isakov</li>
+              <li>The 1975</li>
+            </ul>
+            <div class="genre-tags">
+              <span class="genre-tag">Rock</span>
+              <span class="genre-tag">Indie</span>
+              <span class="genre-tag">Alternative</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="interest-sub reveal-item">
+            <h3>also into</h3>
+            <ul class="plain-list">
+              <li>Gaming</li>
+              <li>Reading</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="content-section" aria-label="Contact">
+      <h2 class="section-heading" data-type-text="drop a dm.">
+        <span class="heading-text">drop a dm.</span>
+        <span class="heading-cursor">&#x2588;</span>
+      </h2>
+      <div>
+        <a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer"
+          class="discord-link reveal-item">discord</a>
+      </div>
+      <div class="contact-email reveal-item">
+        <a href="mailto:melvinjohn202@gmail.com">melvinjohn202@gmail.com</a>
+      </div>
+      <div class="social-row reveal-item">
+        <a href="https://github.com/sapph-h" target="_blank" rel="noopener noreferrer">github</a>
+        <a href="https://www.linkedin.com/in/melvin-john-959027313/" target="_blank"
+          rel="noopener noreferrer">linkedin</a>
+        <a href="https://www.instagram.com/suckstobemel/" target="_blank" rel="noopener noreferrer">instagram</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer aria-label="Build information">
+      <span class="build-tag">[build 2026.11]</span>
+      <span class="build-tag footer-hint">go back to the terminal and type "help" for a little surprise :v</span>
     </footer>
   </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Mark JS loaded for progressive enhancement
+      document.body.classList.add('js');
+
+      var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var SPEED = 75;
+      var VARIANCE = 25;
+
+      // State
+      var history = [];
+      var historyIdx = -1;
+      var booted = false;
+      var skipFlag = false;
+      var animatedSet = new Set();
+
+      // DOM
+      var termOutput = document.getElementById('term-output');
+      var termPrompt = document.getElementById('term-prompt');
+      var termInput = document.getElementById('term-input');
+      var termTyped = document.getElementById('term-typed');
+      var pCursor = document.getElementById('prompt-cursor');
+      var termHint = document.getElementById('term-hint');
+
+      // Utilities
+      function wait(ms) {
+        if (skipFlag || REDUCED) return Promise.resolve();
+        return new Promise(function (r) { setTimeout(r, ms); });
+      }
+
+      function sanitize(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      // ASCII art for MELVIN
+      var ASCII_LOGO =
+        '███╗   ███╗███████╗██╗    ██╗   ██╗██╗███╗   ██╗\n' +
+        '████╗ ████║██╔════╝██║    ██║   ██║██║████╗  ██║\n' +
+        '██╔████╔██║█████╗  ██║    ██║   ██║██║██╔██╗ ██║\n' +
+        '██║╚██╔╝██║██╔══╝  ██║    ╚██╗ ██╔╝██║██║╚██╗██║\n' +
+        '██║ ╚═╝ ██║███████╗███████╗╚████╔╝ ██║██║ ╚████║\n' +
+        '╚═╝     ╚═╝╚══════╝╚══════╝ ╚═══╝  ╚═╝╚═╝  ╚═══╝';
+
+      // Create prompt line element
+      function mkPrompt(withCursor) {
+        var el = document.createElement('div');
+        el.className = 'term-line';
+        var h = '<span class="prompt-text">' +
+          '<span class="user">melvin</span>' +
+          '<span class="at">@</span>' +
+          '<span class="host">portfolio</span>' +
+          '<span class="path">:~</span>' +
+          '<span class="dollar">$ </span>' +
+          '</span><span class="typed-text"></span>';
+        if (withCursor) h += '<span class="cursor">&#x2588;</span>';
+        el.innerHTML = h;
+        return el;
+      }
+
+      // Type text into a prompt line
+      async function typeLine(el, text) {
+        var span = el.querySelector('.typed-text');
+        for (var i = 0; i < text.length; i++) {
+          if (booted) return;
+          span.textContent += text[i];
+          await wait(SPEED + (Math.random() * VARIANCE * 2 - VARIANCE));
+        }
+        var c = el.querySelector('.cursor');
+        if (c) c.remove();
+      }
+
+      // Build fastfetch HTML
+      function buildFF() {
+        var rows = [
+          { t: true, v: '<span class="user">melvin</span><span class="at">@</span><span class="host">portfolio</span>' },
+          { s: true, v: '-------------------------' },
+          { l: 'Role', v: 'Cybersecurity Enthusiast' },
+          { l: 'Also', v: 'Developer / Student' },
+          { l: 'Education', v: 'BTech CSE' },
+          { l: 'University', v: 'Mahindra University' },
+          { l: 'Location', v: 'Hyderabad, India' },
+          { l: 'Interests', v: 'Security / Development' },
+          { l: 'Shell', v: 'portfolio' }
+        ];
+
+        var c = document.createElement('div');
+        c.className = 'fastfetch-output';
+        var h = '<div class="ff-layout">';
+        h += '<pre class="ff-ascii" aria-label="MELVIN">' + ASCII_LOGO + '</pre>';
+        h += '<div class="ff-logo-mobile" aria-label="MELVIN">MELVIN</div>';
+        h += '<div class="ff-info">';
+        for (var i = 0; i < rows.length; i++) {
+          var r = rows[i];
+          if (r.t) {
+            h += '<div class="ff-row ff-title">' + r.v + '</div>';
+          } else if (r.s) {
+            h += '<div class="ff-row ff-sep">' + r.v + '</div>';
+          } else {
+            h += '<div class="ff-row"><span class="ff-label">' + r.l + '</span><span class="ff-value">' + r.v + '</span></div>';
+          }
+        }
+        h += '</div></div>';
+        c.innerHTML = h;
+        return c;
+      }
+
+      // Boot: instant (reduced motion or skip)
+      function bootInstant() {
+        termOutput.innerHTML = '';
+
+        var l1 = mkPrompt(false);
+        l1.querySelector('.typed-text').textContent = 'hello world!';
+        termOutput.appendChild(l1);
+
+        var l2 = mkPrompt(false);
+        l2.querySelector('.typed-text').textContent = 'fastfetch';
+        termOutput.appendChild(l2);
+
+        termOutput.appendChild(buildFF());
+        termPrompt.style.display = 'flex';
+        booted = true;
+      }
+
+      // Boot: animated
+      async function bootAnimated() {
+        await wait(700);
+        if (booted) return;
+
+        // hello world!
+        var l1 = mkPrompt(true);
+        termOutput.appendChild(l1);
+        await wait(400);
+        if (booted) return;
+        await typeLine(l1, 'hello world!');
+        if (booted) return;
+        await wait(1800);
+        if (booted) return;
+
+        // fastfetch command
+        var l2 = mkPrompt(true);
+        termOutput.appendChild(l2);
+        await wait(300);
+        if (booted) return;
+        await typeLine(l2, 'fastfetch');
+        if (booted) return;
+        await wait(800);
+        if (booted) return;
+
+        // Fastfetch output with stagger
+        var ff = buildFF();
+        termOutput.appendChild(ff);
+
+        var ascii = ff.querySelector('.ff-ascii');
+        var mob = ff.querySelector('.ff-logo-mobile');
+        var rows = ff.querySelectorAll('.ff-row');
+
+        // Initially hidden
+        if (ascii) { ascii.style.opacity = '0'; ascii.style.transition = 'opacity 0.35s ease'; }
+        if (mob) { mob.style.opacity = '0'; mob.style.transition = 'opacity 0.35s ease'; }
+        rows.forEach(function (r) {
+          r.style.opacity = '0';
+          r.style.transform = 'translateY(4px)';
+          r.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        });
+
+        await wait(150);
+        if (booted) return;
+
+        // Reveal logo
+        if (ascii) ascii.style.opacity = '1';
+        if (mob) mob.style.opacity = '1';
+        await wait(350);
+        if (booted) return;
+
+        // Reveal rows
+        for (var i = 0; i < rows.length; i++) {
+          if (booted) return;
+          rows[i].style.opacity = '1';
+          rows[i].style.transform = 'translateY(0)';
+          await wait(70);
+        }
+
+        await wait(500);
+        if (booted) return;
+
+        // Show interactive prompt
+        termPrompt.style.display = 'flex';
+        booted = true;
+      }
+
+      function boot() {
+        if (REDUCED) {
+          bootInstant();
+        } else {
+          // Allow click-to-skip during boot
+          var handler = function () {
+            if (!booted) {
+              skipFlag = true;
+              bootInstant();
+            }
+          };
+          document.getElementById('terminal').addEventListener('click', handler);
+          bootAnimated().then(function () {
+            document.getElementById('terminal').removeEventListener('click', handler);
+          });
+        }
+      }
+
+      // ===== Terminal Commands =====
+      var cmds = {
+        help: function () {
+          return '\n' +
+            '  <span class="lbl">help</span>show this message\n' +
+            '  <span class="lbl">start</span>explore portfolio (scroll to about)\n' +
+            '  <span class="lbl">whoami</span>who is melvin\n' +
+            '  <span class="lbl">about</span>personal description\n' +
+            '  <span class="lbl">skills</span>languages and tools\n' +
+            '  <span class="lbl">interests</span>cybersecurity and more\n' +
+            '  <span class="lbl">projects</span>current project status\n' +
+            '  <span class="lbl">music</span>what\'s playing\n' +
+            '  <span class="lbl">socials</span>find me online\n' +
+            '  <span class="lbl">contact</span>get in touch\n' +
+            '  <span class="lbl">ls</span>list directory\n' +
+            '  <span class="lbl">pwd</span>print working directory\n' +
+            '  <span class="lbl">clear</span>clear terminal\n' +
+            '  <span class="lbl">fastfetch</span>system information\n' +
+            '  <span class="lbl">echo</span>print text\n' +
+            '  <span class="lbl">sudo</span>don\'t even try\n';
+        },
+
+        start: function () {
+          setTimeout(function () {
+            var about = document.getElementById('about');
+            if (about) {
+              var behavior = REDUCED ? 'auto' : 'smooth';
+              about.scrollIntoView({ behavior: behavior });
+            }
+          }, 180);
+          return '\n  navigating to ~/about/ ...\n';
+        },
+
+        explore: function () {
+          return cmds.start();
+        },
+
+        whoami: function () {
+          return '\n  melvin\n  cybersecurity enthusiast, developer, student\n';
+        },
+
+        about: function () {
+          return '\n  i do not think, therefore i do not am\n\n  BTech CSE, Mahindra University, Hyderabad\n  Cybersecurity Enthusiast / Developer / Student\n';
+        },
+
+        skills: function () {
+          return '\n' +
+            '  <span class="lbl">Languages</span>Python, Java, C, SQL, QBASIC\n' +
+            '  <span class="lbl">Tools</span>Linux, Android, Windows, Git,\n' +
+            '              Wireshark, Unity Engine,\n' +
+            '              Cisco Packet Tracer, Virtual Machines\n';
+        },
+
+        interests: function () {
+          return '\n  Cybersecurity\n  Capture The Flag (CTFs)\n  Network Analysis\n  Ethical Hacking\n  Penetration Testing\n  Reverse Engineering\n';
+        },
+
+        projects: function () {
+          return '\n  ./PROJECTS/\n  > loading...\n\n  scroll down to see more.\n';
+        },
+
+        music: function () {
+          return '\n  NOW PLAYING\n  Nude, Radiohead\n\n' +
+            '  Favorite Artists:\n  Radiohead, Cigarettes After Sex, Gregory Alan Isakov\n\n' +
+            '  Genres: Rock, Indie, Alternative\n';
+        },
+
+        socials: function () {
+          return '\n' +
+            '  <span class="lbl">github</span><a href="https://github.com/sapph-h" target="_blank" rel="noopener noreferrer">github.com/sapph-h</a>\n' +
+            '  <span class="lbl">linkedin</span><a href="https://www.linkedin.com/in/melvin-john-959027313/" target="_blank" rel="noopener noreferrer">linkedin.com/in/melvin-john-959027313</a>\n' +
+            '  <span class="lbl">discord</span><a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer">discord.com/users/742655903710314506</a>\n' +
+            '  <span class="lbl">instagram</span><a href="https://www.instagram.com/suckstobemel/" target="_blank" rel="noopener noreferrer">instagram.com/suckstobemel</a>\n' +
+            '  <span class="lbl">email</span><a href="mailto:melvinjohn202@gmail.com">melvinjohn202@gmail.com</a>\n';
+        },
+
+        contact: function () {
+          return '\n' +
+            '  <span class="lbl">Discord</span><a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer">discord.com/users/742655903710314506</a>\n' +
+            '  <span class="lbl">Email</span><a href="mailto:melvinjohn202@gmail.com">melvinjohn202@gmail.com</a>\n';
+        },
+
+        ls: function () {
+          return '\n  about.txt    skills.conf   projects/    interests/\n  music.log    socials.sh    contact.txt  .bashrc\n  .vimrc       .secret       README.md\n';
+        },
+
+        pwd: function () {
+          return '  /home/melvin/portfolio';
+        },
+
+        sudo: function () {
+          return '  melvin is not in the sudoers file. this incident will be reported.';
+        }
+      };
+
+      function scrollToPrompt() {
+        termPrompt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function processCmd(raw) {
+        var input = raw.trim();
+        if (!input) return;
+
+        // History
+        history.push(input);
+        if (history.length > 50) history.shift();
+        historyIdx = history.length;
+
+        var parts = input.split(/\s+/);
+        var cmd = parts[0].toLowerCase();
+        var args = parts.slice(1).join(' ');
+
+        // Clear: don't echo the command, just wipe output
+        if (cmd === 'clear') {
+          termOutput.innerHTML = '';
+          return;
+        }
+
+        // Echo the command
+        var line = mkPrompt(false);
+        line.querySelector('.typed-text').textContent = input;
+        termOutput.appendChild(line);
+
+        // Echo text
+        if (cmd === 'echo') {
+          var out = document.createElement('div');
+          out.className = 'cmd-output';
+          out.textContent = args;
+          termOutput.appendChild(out);
+          scrollToPrompt();
+          return;
+        }
+
+        // Fastfetch re-render
+        if (cmd === 'fastfetch') {
+          termOutput.appendChild(buildFF());
+          scrollToPrompt();
+          return;
+        }
+
+        // Known command
+        if (cmds[cmd]) {
+          var result = cmds[cmd]();
+          var div = document.createElement('div');
+          div.className = 'cmd-output';
+          div.innerHTML = result;
+          termOutput.appendChild(div);
+        } else {
+          var err = document.createElement('div');
+          err.className = 'cmd-output cmd-error';
+          err.textContent = 'command not found: ' + cmd;
+          termOutput.appendChild(err);
+        }
+
+        scrollToPrompt();
+      }
+
+      // ===== Terminal Input =====
+      function setupTerminal() {
+        if (termHint) {
+          termHint.addEventListener('click', function (e) {
+            e.stopPropagation();
+            termHint.style.display = 'none';
+            processCmd('start');
+          });
+
+          termHint.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              e.stopPropagation();
+              termHint.style.display = 'none';
+              processCmd('start');
+            }
+          });
+        }
+
+        termPrompt.addEventListener('click', function (e) {
+          if (e.target === termHint) return;
+          termInput.focus();
+        });
+
+        document.getElementById('terminal').addEventListener('click', function (e) {
+          if (!booted) return;
+          if (e.target.closest('a') || e.target === termHint) return;
+          termInput.focus();
+        });
+
+        termInput.addEventListener('input', function () {
+          termTyped.textContent = termInput.value;
+          if (termHint) {
+            if (termInput.value.length > 0) {
+              termHint.style.display = 'none';
+            } else if (history.length === 0) {
+              termHint.style.display = 'inline';
+            }
+          }
+        });
+
+        termInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            var v = termInput.value;
+            termInput.value = '';
+            termTyped.textContent = '';
+            if (termHint) termHint.style.display = 'none';
+            processCmd(v);
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIdx > 0) {
+              historyIdx--;
+              termInput.value = history[historyIdx];
+              termTyped.textContent = termInput.value;
+            }
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIdx < history.length - 1) {
+              historyIdx++;
+              termInput.value = history[historyIdx];
+              termTyped.textContent = termInput.value;
+            } else {
+              historyIdx = history.length;
+              termInput.value = '';
+              termTyped.textContent = '';
+            }
+          }
+        });
+
+        termInput.addEventListener('focus', function () {
+          termPrompt.classList.add('focused');
+        });
+        termInput.addEventListener('blur', function () {
+          termPrompt.classList.remove('focused');
+        });
+      }
+
+      // ===== Scroll Animations =====
+      function setupScroll() {
+        if (REDUCED) {
+          // Show everything, headings already have text from HTML
+          document.querySelectorAll('.reveal-item').forEach(function (el) {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+          });
+          document.querySelectorAll('.skill-panel').forEach(function (p) {
+            p.classList.add('visible');
+          });
+          document.querySelectorAll('.pic-wrapper').forEach(function (p) {
+            p.classList.add('revealed');
+          });
+          return;
+        }
+
+        // Clear heading text for typing animation
+        document.querySelectorAll('.section-heading[data-type-text]').forEach(function (h) {
+          h.querySelector('.heading-text').textContent = '';
+        });
+
+        // Setup scan-ready on pic wrappers
+        document.querySelectorAll('.pic-wrapper').forEach(function (pw) {
+          pw.classList.add('scan-ready');
+        });
+
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && !animatedSet.has(entry.target)) {
+              animatedSet.add(entry.target);
+              animateSection(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.content-section').forEach(function (s) {
+          observer.observe(s);
+        });
+      }
+
+      function animateSection(section) {
+        // Type heading
+        var heading = section.querySelector('.section-heading[data-type-text]');
+        if (heading) typeHeading(heading);
+
+        // Reveal items staggered
+        var items = section.querySelectorAll('.reveal-item');
+        items.forEach(function (item, i) {
+          setTimeout(function () {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+            item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          }, 500 + i * 150);
+        });
+
+        // Border panels
+        var panels = section.querySelectorAll('.skill-panel');
+        panels.forEach(function (panel, i) {
+          setTimeout(function () {
+            panel.classList.add('visible');
+          }, 400 + i * 200);
+        });
+
+        // Profile pic scan
+        var pic = section.querySelector('.pic-wrapper');
+        if (pic) {
+          setTimeout(function () {
+            pic.classList.add('revealed');
+          }, 700);
+        }
+      }
+
+      async function typeHeading(heading) {
+        var text = heading.getAttribute('data-type-text');
+        var span = heading.querySelector('.heading-text');
+        var cur = heading.querySelector('.heading-cursor');
+
+        cur.style.display = 'inline';
+        span.textContent = '';
+
+        for (var i = 0; i < text.length; i++) {
+          span.textContent += text[i];
+          await new Promise(function (r) {
+            setTimeout(r, 45 + Math.random() * 25);
+          });
+        }
+
+        setTimeout(function () {
+          cur.style.display = 'none';
+        }, 1200);
+      }
+
+      // ===== Profile Pic Fallback =====
+      function setupPic() {
+        var img = document.querySelector('.profile-pic');
+        if (img) {
+          img.addEventListener('error', function () {
+            this.style.display = 'none';
+            this.parentElement.classList.add('pic-missing');
+            this.parentElement.classList.remove('scan-ready');
+          });
+        }
+      }
+
+      function setupFooter() {
+        var hint = document.querySelector('.footer-hint');
+        if (hint) {
+          hint.addEventListener('click', function () {
+            var term = document.getElementById('terminal');
+            if (term) {
+              term.scrollIntoView({ behavior: 'smooth' });
+              if (termInput) termInput.focus();
+            }
+          });
+        }
+      }
+
+      // ===== Init =====
+      function init() {
+        setupPic();
+        setupFooter();
+        setupTerminal();
+        boot();
+        setupScroll();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
 </body>
+
 </html>

@@ -655,7 +655,7 @@
       color: var(--accent);
       border: 1px solid var(--accent);
       padding: 0.65rem 1.6rem;
-      margin: 1.5rem 0 1.5rem;
+      margin: 1.5rem 0 2rem;
       transition: background 0.2s, color 0.2s;
       font-weight: 500;
     }
@@ -668,20 +668,6 @@
     .discord-link:focus-visible {
       outline: 2px solid var(--accent-bright);
       outline-offset: 4px;
-    }
-
-    .contact-email {
-      color: var(--muted);
-      font-size: 0.88rem;
-      margin-bottom: 2rem;
-    }
-
-    .contact-email a {
-      color: var(--muted);
-    }
-
-    .contact-email a:hover {
-      color: var(--accent);
     }
 
     .social-row {
@@ -1042,9 +1028,6 @@
         <a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer"
           class="discord-link reveal-item">discord</a>
       </div>
-      <div class="contact-email reveal-item">
-        <a href="mailto:melvinjohn202@gmail.com">melvinjohn202@gmail.com</a>
-      </div>
       <div class="social-row reveal-item">
         <a href="https://github.com/sapph-h" target="_blank" rel="noopener noreferrer">github</a>
         <a href="https://www.linkedin.com/in/melvin-john-959027313/" target="_blank"
@@ -1276,22 +1259,22 @@
       var cmds = {
         help: function () {
           return '\n' +
-            '  <span class="lbl">help</span>show this message\n' +
-            '  <span class="lbl">start</span>explore portfolio (scroll to about)\n' +
-            '  <span class="lbl">whoami</span>who is melvin\n' +
-            '  <span class="lbl">about</span>personal description\n' +
-            '  <span class="lbl">skills</span>languages and tools\n' +
-            '  <span class="lbl">interests</span>cybersecurity and more\n' +
-            '  <span class="lbl">projects</span>current project status\n' +
-            '  <span class="lbl">music</span>what\'s playing\n' +
-            '  <span class="lbl">socials</span>find me online\n' +
-            '  <span class="lbl">contact</span>get in touch\n' +
-            '  <span class="lbl">ls</span>list directory\n' +
-            '  <span class="lbl">pwd</span>print working directory\n' +
-            '  <span class="lbl">clear</span>clear terminal\n' +
-            '  <span class="lbl">fastfetch</span>system information\n' +
-            '  <span class="lbl">echo</span>print text\n' +
-            '  <span class="lbl">sudo</span>don\'t even try\n';
+            '  <span class="lbl">help</span>\n' +
+            '  <span class="lbl">start</span>\n' +
+            '  <span class="lbl">whoami</span>\n' +
+            '  <span class="lbl">about</span>\n' +
+            '  <span class="lbl">skills</span>\n' +
+            '  <span class="lbl">interests</span>\n' +
+            '  <span class="lbl">projects</span>\n' +
+            '  <span class="lbl">music</span>\n' +
+            '  <span class="lbl">socials</span>\n' +
+            '  <span class="lbl">contact</span>\n' +
+            '  <span class="lbl">ls</span>\n' +
+            '  <span class="lbl">pwd</span>\n' +
+            '  <span class="lbl">clear</span>\n' +
+            '  <span class="lbl">fastfetch</span>\n' +
+            '  <span class="lbl">echo</span>\n' +
+            '  <span class="lbl">sudo</span>\n';
         },
 
         start: function () {
@@ -1344,14 +1327,12 @@
             '  <span class="lbl">github</span><a href="https://github.com/sapph-h" target="_blank" rel="noopener noreferrer">github.com/sapph-h</a>\n' +
             '  <span class="lbl">linkedin</span><a href="https://www.linkedin.com/in/melvin-john-959027313/" target="_blank" rel="noopener noreferrer">linkedin.com/in/melvin-john-959027313</a>\n' +
             '  <span class="lbl">discord</span><a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer">discord.com/users/742655903710314506</a>\n' +
-            '  <span class="lbl">instagram</span><a href="https://www.instagram.com/suckstobemel/" target="_blank" rel="noopener noreferrer">instagram.com/suckstobemel</a>\n' +
-            '  <span class="lbl">email</span><a href="mailto:melvinjohn202@gmail.com">melvinjohn202@gmail.com</a>\n';
+            '  <span class="lbl">instagram</span><a href="https://www.instagram.com/suckstobemel/" target="_blank" rel="noopener noreferrer">instagram.com/suckstobemel</a>\n';
         },
 
         contact: function () {
           return '\n' +
-            '  <span class="lbl">Discord</span><a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer">discord.com/users/742655903710314506</a>\n' +
-            '  <span class="lbl">Email</span><a href="mailto:melvinjohn202@gmail.com">melvinjohn202@gmail.com</a>\n';
+            '  <span class="lbl">Discord</span><a href="https://discord.com/users/742655903710314506" target="_blank" rel="noopener noreferrer">discord.com/users/742655903710314506</a>\n';
         },
 
         ls: function () {
